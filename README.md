@@ -59,15 +59,4 @@ flowchart LR
 - [ ] Informe técnico
 - [ ] Sustentación con demostración en vivo
 
-<details>
-<summary><b>⚙️ Para el instructor: cómo activar las simulaciones</b></summary>
 
-<br/>
-
-El archivo `index.html` de la raíz contiene las cuatro simulaciones. Para que los enlaces ▶️ funcionen:
-
-1. En GitHub, entrar a **Settings → Pages**.
-2. En **Source**, elegir **Deploy from a branch**, rama `main`, carpeta `/ (root)`.
-3. Guardar y esperar un par de minutos. La página queda en `https://dialejobv.github.io/Proyectos_Productivos_SENA/`.
-
-</details>
