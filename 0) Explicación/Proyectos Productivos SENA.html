@@ -1,0 +1,811 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Proyectos Productivos SENA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: cuaderno de laboratorio — cabecera con 4 pestañas de proyecto, cada proyecto con índice lateral y secciones apiladas; la simulación ocupa el ancho completo */
+:root{
+  --bg:#f3f5f4; --surface:#ffffff; --sunk:#e8ecea; --line:#cdd5d2;
+  --fg:#17211f; --muted:#56635f; --accent:#0d6b5c; --accent-soft:#d6ebe6;
+  --signal:#b5650d; --signal-soft:#f6e6d2; --ok:#2f7d32; --bad:#b3261e; --warn:#a46a00;
+  --f-display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --f-body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Consolas, monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111816; --surface:#18211f; --sunk:#0c1210; --line:#2c3a36;
+  --fg:#e3ebe8; --muted:#94a39e; --accent:#4fc2ab; --accent-soft:#16332d;
+  --signal:#f0a24a; --signal-soft:#3a2a17; --ok:#6cc070; --bad:#ff7b72; --warn:#e3b341; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111816; --surface:#18211f; --sunk:#0c1210; --line:#2c3a36;
+  --fg:#e3ebe8; --muted:#94a39e; --accent:#4fc2ab; --accent-soft:#16332d;
+  --signal:#f0a24a; --signal-soft:#3a2a17; --ok:#6cc070; --bad:#ff7b72; --warn:#e3b341; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--f-body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:0 64px}
+header.top{padding-block:36px 8px}
+.eyebrow{font:600 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+h1{font:700 clamp(30px,4.4vw,48px)/1.05 var(--f-display);margin:.35em 0 .3em;text-wrap:balance;letter-spacing:-.01em}
+h2{font:700 26px/1.15 var(--f-display);margin:0 0 .5em;text-wrap:balance}
+h3{font:700 18px/1.25 var(--f-display);margin:0 0 .4em}
+.lede{max-width:68ch;color:var(--muted);margin:0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-block:24px 0;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding-block:10px;z-index:5;border-bottom:1px solid var(--line)}
+.tab{font:600 14px/1.2 var(--f-body);border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:9px 14px;border-radius:999px;cursor:pointer;display:flex;gap:8px;align-items:center}
+.tab b{font:600 12px var(--f-mono);color:var(--muted)}
+.tab[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:var(--bg)}
+.tab[aria-selected="true"] b{color:var(--bg)}
+.tab:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
+.proj{display:grid;grid-template-columns:200px minmax(0,1fr);gap:36px;margin-top:28px}
+.toc{position:sticky;top:90px;align-self:start;display:flex;flex-direction:column;gap:2px;font-size:14px}
+.toc a{color:var(--muted);text-decoration:none;padding:5px 10px;border-left:2px solid var(--line)}
+.toc a:hover{color:var(--fg);border-left-color:var(--accent)}
+.sections{display:flex;flex-direction:column;gap:44px;min-width:0}
+section{scroll-margin-top:90px;min-width:0}
+.kicker{font:600 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--signal);margin-bottom:6px}
+.ptitle{font:700 clamp(24px,3vw,34px)/1.12 var(--f-display);margin:0 0 14px;text-wrap:balance}
+p{margin:0 0 .8em;max-width:72ch}
+.question{border:1px solid var(--line);background:var(--signal-soft);border-radius:var(--r);padding:14px 18px;max-width:72ch;margin-top:14px}
+.question strong{display:block;font:600 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--signal);margin-bottom:4px}
+ul.clean{margin:0;padding-left:1.15em;max-width:72ch}
+ul.clean li{margin-bottom:.35em}
+/* simulación */
+.sim{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:16px}
+.sim-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.sim-head p{color:var(--muted);margin:0;font-size:15px}
+.controls{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:end;padding:12px 14px;background:var(--sunk);border-radius:var(--r)}
+.ctl{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--muted);min-width:0}
+.ctl label{font-weight:700}
+select,input[type=range],textarea,input[type=text]{font:14px var(--f-body);color:var(--fg);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+input[type=range]{padding:0;accent-color:var(--accent);width:150px}
+.btn{font:700 14px var(--f-body);background:var(--accent);color:var(--bg);border:0;border-radius:8px;padding:8px 14px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn.warn{background:var(--signal);color:var(--bg)}
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.panel{background:var(--sunk);border-radius:var(--r);padding:12px;min-width:0}
+.panel h4{margin:0 0 8px;font:600 12px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+canvas{display:block;width:100%;height:auto;border-radius:8px;background:var(--surface)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.stat span{display:block;font-size:12px;color:var(--muted)}
+.stat b{font:600 18px var(--f-mono);font-variant-numeric:tabular-nums}
+.stat.bad b{color:var(--bad)} .stat.ok b{color:var(--ok)} .stat.warn b{color:var(--warn)}
+.log{font:12.5px/1.5 var(--f-mono);height:190px;overflow:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;white-space:pre-wrap}
+.log .a{color:var(--signal)} .log .e{color:var(--bad)} .log .o{color:var(--ok)}
+.code{font:12.5px/1.5 var(--f-mono);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px;overflow-x:auto;white-space:pre}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.chip{font:12px var(--f-mono);padding:2px 6px;border-radius:5px;background:var(--surface);border:1px solid var(--line)}
+.chip.stop{opacity:.45;text-decoration:line-through}
+.chip.pos{background:var(--accent-soft);border-color:var(--accent)}
+.chip.neg{background:var(--signal-soft);border-color:var(--signal)}
+.pill{align-self:flex-start;white-space:nowrap;height:fit-content;font:600 11px var(--f-mono);padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em}
+.pill.pos{background:var(--accent-soft);color:var(--accent)} .pill.neg{background:var(--signal-soft);color:var(--signal)} .pill.neu{background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.msgs{display:flex;flex-direction:column;gap:8px;max-height:330px;overflow:auto}
+.msg{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.msg-top{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.msg-meta{font:11.5px var(--f-mono);color:var(--muted)}
+.bars{display:flex;flex-direction:column;gap:6px}
+.bar{display:grid;grid-template-columns:130px minmax(0,1fr) 92px;gap:8px;align-items:center;font-size:13px}
+.bar .track{height:14px;background:var(--surface);border-radius:4px;overflow:hidden;border:1px solid var(--line)}
+.bar .fill{height:100%;background:var(--accent)}
+.bar .v{font:12px var(--f-mono);text-align:right;font-variant-numeric:tabular-nums}
+.note{font-size:13px;color:var(--muted);margin:0}
+/* arquitectura */
+.flow{display:flex;flex-direction:column;gap:0}
+.stage{display:grid;grid-template-columns:44px minmax(0,1fr);gap:14px;position:relative;padding-bottom:16px}
+.stage:not(:last-child)::before{content:"";position:absolute;left:21px;top:40px;bottom:0;width:2px;background:var(--line)}
+.stage .n{width:44px;height:40px;border-radius:8px;background:var(--accent-soft);color:var(--accent);font:600 15px var(--f-mono);display:grid;place-items:center;border:1px solid var(--accent)}
+.stage .n.loop{background:var(--signal-soft);color:var(--signal);border-color:var(--signal)}
+.stage .body{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 14px;min-width:0}
+.stage .body b{font-family:var(--f-display);font-size:16px}
+.stage .tool{font:12.5px var(--f-mono);color:var(--accent);display:block;margin-top:2px}
+.stage .body p{margin:.3em 0 0;font-size:15px}
+.tips{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-top:8px}
+.tip{border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;background:var(--surface);font-size:15px}
+.tip b{display:block;font-family:var(--f-display);margin-bottom:2px}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.box{border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;background:var(--surface)}
+.box h3{font-size:15px;font-family:var(--f-mono);letter-spacing:.06em;text-transform:uppercase}
+.box.yes h3{color:var(--ok)} .box.no h3{color:var(--bad)} .box.kit h3{color:var(--accent)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--r);background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:620px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--sunk)}
+td.w{font:600 14px var(--f-mono);white-space:nowrap;color:var(--accent)}
+tr:last-child td{border-bottom:0}
+.refs{display:flex;flex-direction:column;gap:10px;padding:0;margin:0;list-style:none}
+.refs li{border:1px solid var(--line);border-radius:var(--r);padding:10px 14px;background:var(--surface)}
+.refs .cite{font-size:15px}
+.refs .why{font-size:14px;color:var(--muted);margin-top:4px}
+.refs a{color:var(--accent);font:13px var(--f-mono);word-break:break-all}
+.general{margin-top:20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.general div{border-top:2px solid var(--accent);padding-top:8px;font-size:14.5px}
+.general b{display:block;font-family:var(--f-display);font-size:15px}
+@media (max-width:820px){.proj{grid-template-columns:1fr}.toc{position:static;flex-direction:row;flex-wrap:wrap}.toc a{border-left:0;border-bottom:2px solid var(--line)}.bar{grid-template-columns:96px minmax(0,1fr) 80px}}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Proyectos productivos · Media técnica grado 11</div>
+    <h1>Redes, visión e IA en sistemas teleinformáticos</h1>
+    <p class="lede">Cuatro proyectos con su enunciado, una simulación interactiva, la arquitectura revisada a partir de la planteada en el repositorio, el alcance realista para estudiantes de grado 11, una guía por semanas y artículos científicos de soporte.</p>
+    <div class="general">
+      <div><b>Equipos</b>3 a 4 estudiantes con roles: redes, programación, datos y documentación.</div>
+      <div><b>Duración sugerida</b>10 semanas de 4 horas. Ajustable al calendario de la institución.</div>
+      <div><b>Evidencias</b>Repositorio en GitHub, bitácora semanal, informe técnico y sustentación.</div>
+      <div><b>Hilo común</b>Todos los proyectos miden el peso de los datos en la red: bytes, ancho de banda y latencia.</div>
+    </div>
+  </header>
+  <nav class="tabs" role="tablist" id="tabs"></nav>
+  <main id="main"></main>
+</div>
+
+<script>
+const P = [
+{
+ id:"p1", num:"01", short:"Streaming YOLOv8",
+ title:"Redes de Streaming con YOLOv8 con conectividad a switch y router",
+ enunciado:[
+  "La institución necesita vigilar un espacio (entrada, parqueadero o laboratorio) con una cámara. El equipo debe construir un sistema que capture el video, detecte objetos con YOLOv8, dibuje los resultados y transmita el video procesado por una red LAN segmentada con un switch (VLAN y QoS) y un router (enrutamiento entre VLAN y NAT) hasta un cliente que lo visualiza.",
+  "Además de que funcione, el equipo debe medir cómo la resolución, los cuadros por segundo (FPS), el códec y la congestión de la red afectan la latencia y la calidad del video que llega al cliente."],
+ pregunta:"¿Cómo influyen la configuración del video y de la red (VLAN, QoS) en la latencia y la pérdida de paquetes de un servicio de streaming con detección de objetos?",
+ objetivos:["Implementar en Python un flujo captura → YOLOv8 → transmisión.","Configurar una topología con VLAN, enlace troncal y enrutamiento entre VLAN.","Medir latencia de extremo a extremo, FPS y ancho de banda con y sin QoS.","Documentar los resultados en un informe técnico con tablas y gráficas."],
+ simIntro:"Cámara simulada con detecciones, la red del laboratorio y lo que ve el cliente. Cambie la configuración y observe la latencia y la pérdida.",
+ capas:[
+  ["Fuente de video","Webcam USB, celular con app de cámara IP (RTSP) o un archivo MP4","Use un MP4 fijo para que los experimentos se puedan repetir con las mismas condiciones."],
+  ["Captura y decodificación","OpenCV · cv2.VideoCapture","FFmpeg solo hace falta si la fuente es RTSP."],
+  ["Preprocesamiento","ultralytics (automático, 640 px)","La librería ya redimensiona y normaliza. Se explica el concepto, no hay que programarlo."],
+  ["Inferencia YOLOv8","YOLOv8n preentrenado en COCO","El modelo nano es el más liviano y corre en la CPU de un portátil. Solo detección; segmentación y pose como reto."],
+  ["Post-procesado","Conteo por zona · model.track (ByteTrack)","El NMS ya viene incluido. Conteo de personas y una alerta simple cuando se supera un umbral."],
+  ["Codificación y empaquetado","MediaMTX + FFmpeg (H.264) o Flask con MJPEG","MJPEG es más fácil de montar; RTSP/WebRTC permite comparar protocolos. Elegir uno como base."],
+  ["Switch (capa 2)","Cisco 2960 o Packet Tracer","VLAN 10 cámaras/servidor, VLAN 20 clientes, VLAN 99 gestión. Troncal 802.1Q al router y marca DSCP AF41 al video."],
+  ["Router (capa 3)","Router-on-a-stick, ACL, NAT","Subinterfaces por VLAN. ACL que solo permita los puertos del streaming hacia los clientes."],
+  ["Cliente / visualizador","VLC o navegador","Mostrar el video y el conteo. Un reloj en pantalla permite medir la latencia."]],
+ loop:null,
+ mejoras:[
+  ["Dos equipos físicos","El servidor de inferencia y el cliente deben estar en VLAN distintas para que el video cruce de verdad el switch y el router."],
+  ["Módulo de medición","Agregar timestamps, ping, iperf3 y Wireshark. Sin mediciones no se puede responder la pregunta del proyecto."],
+  ["Mapa OSI","Ubicar cada bloque en su capa: RTSP/WebRTC (aplicación), UDP/TCP (transporte), IP (red), VLAN (enlace)."],
+  ["STP y VPN como teoría","Con un solo switch, STP no muestra efecto visible; la VPN supera el alcance. Se explican, no se montan."]],
+ si:["YOLOv8n preentrenado, sin entrenar un modelo propio.","1 cámara, 1 servidor y 1 o 2 clientes.","Topología en Packet Tracer y montaje físico si hay equipos.","Mediciones con Wireshark, iperf3 y reloj en pantalla."],
+ no:["Entrenar modelos con datasets grandes.","Varias cámaras con balanceo de carga.","VPN, BGP o alta disponibilidad."],
+ kit:["Portátil con Python 3.10+ y webcam","Switch gestionable y router (o Packet Tracer)","Cables UTP categoría 6","Librerías: ultralytics, opencv-python, flask"],
+ guia:[
+  ["Fundamentos: modelo OSI y TCP/IP, qué es streaming, qué es YOLO.","Mapa conceptual"],
+  ["Topología en Packet Tracer: VLAN, troncal, router-on-a-stick.","Archivo .pkt con ping entre VLAN"],
+  ["Python y OpenCV: capturar video y medir FPS.","Script captura.py"],
+  ["YOLOv8: detectar en imagen y video, contar personas.","Script detectar.py y capturas"],
+  ["Transmisión: publicar el video anotado (MJPEG o RTSP).","Video visible en otro PC"],
+  ["Montaje físico: switch y router reales con la misma topología.","show running-config de cada equipo"],
+  ["Medición: latencia, ancho de banda y captura de tráfico.","Tabla de datos y captura .pcap"],
+  ["Experimentos: 480p vs 720p, 15 vs 30 FPS, con y sin QoS, con congestión.","Gráficas comparativas"],
+  ["Integración y pruebas finales.","Demo grabada"],
+  ["Socialización de resultados.","Informe técnico y sustentación"]],
+ rubrica:[["Configuración de red (VLAN, troncal, enrutamiento, ACL)",25],["Flujo de detección con YOLOv8 funcionando",20],["Transmisión y visualización en el cliente",15],["Mediciones y análisis de resultados",25],["Informe y sustentación",15]],
+ refs:[
+  ["Redmon, J., Divvala, S., Girshick, R. y Farhadi, A. (2016). You Only Look Once: Unified, Real-Time Object Detection. CVPR.","Artículo original de YOLO: por qué detectar en una sola pasada permite tiempo real.","https://arxiv.org/abs/1506.02640"],
+  ["Terven, J., Córdova-Esparza, D.-M. y Romero-González, J.-A. (2023). A Comprehensive Review of YOLO Architectures in Computer Vision: From YOLOv1 to YOLOv8 and YOLO-NAS. Machine Learning and Knowledge Extraction, 5(4).","Revisión de todas las versiones hasta YOLOv8. Buena para el marco teórico.","https://doi.org/10.3390/make5040083"],
+  ["Zhang, Y. et al. (2022). ByteTrack: Multi-Object Tracking by Associating Every Detection Box. ECCV.","Algoritmo de seguimiento que usa ultralytics en model.track para contar objetos.","https://arxiv.org/abs/2110.06864"],
+  ["Wiegand, T., Sullivan, G. J., Bjøntegaard, G. y Luthra, A. (2003). Overview of the H.264/AVC Video Coding Standard. IEEE Transactions on Circuits and Systems for Video Technology, 13(7).","Explica el códec H.264 y por qué reduce el ancho de banda del video.","https://doi.org/10.1109/TCSVT.2003.815165"],
+  ["Ananthanarayanan, G. et al. (2017). Real-Time Video Analytics: The Killer App for Edge Computing. IEEE Computer, 50(10).","Por qué procesar el video cerca de la cámara (edge) reduce latencia y tráfico.","https://doi.org/10.1109/MC.2017.3641638"],
+  ["Khani, M. et al. (2021). Real-Time Video Inference on Edge Devices via Adaptive Model Streaming. ICCV.","Relación entre red, ancho de banda e inferencia de video en tiempo real.","https://openaccess.thecvf.com/content/ICCV2021/papers/Khani_Real-Time_Video_Inference_on_Edge_Devices_via_Adaptive_Model_Streaming_ICCV_2021_paper.pdf"]]
+},
+{
+ id:"p2", num:"02", short:"Señas con MediaPipe",
+ title:"Redes de Datos en tecnologías de visión computacional. Caso de estudio: lenguaje de señas con MediaPipe",
+ enunciado:[
+  "Una persona sorda necesita comunicarse con una persona oyente que está en otro equipo de la red. El equipo construirá un sistema que reconozca un conjunto de señas de la Lengua de Señas Colombiana (LSC) con MediaPipe, las convierta en texto y las envíe por la red a una aplicación receptora que las muestra y las lee en voz alta.",
+  "El reto de redes es decidir qué se transmite: el video completo, los 21 puntos de la mano o solo el texto reconocido, y medir cuánto pesa cada opción."],
+ pregunta:"¿Qué representación de los datos (video, puntos de la mano o texto) permite transmitir lenguaje de señas con menor ancho de banda y latencia sin perder información útil?",
+ objetivos:["Extraer los 21 puntos (landmarks) de la mano con MediaPipe.","Entrenar un clasificador para 5 a 10 señas estáticas de LSC.","Enviar los resultados por MQTT a otro equipo de la red.","Comparar el ancho de banda de video, landmarks y texto."],
+ simIntro:"Mano simulada con los 21 puntos de MediaPipe. El clasificador reconoce la seña y el resultado viaja por MQTT. Compare el peso de cada formato y el efecto del QoS cuando hay pérdida.",
+ capas:[
+  ["Captura de video","Webcam a 30 FPS, 640×480","Buena iluminación y fondo liso mejoran mucho la detección."],
+  ["MediaPipe Hands","MediaPipe Tasks · Hand Landmarker","Entrega 21 puntos (x, y, z) por mano en cada cuadro."],
+  ["Extracción de características","Coordenadas relativas a la muñeca y distancias entre dedos","Empezar con coordenadas relativas; ángulos como mejora posterior."],
+  ["Normalización y secuencias","Escalar por el tamaño de la mano","Las ventanas temporales solo hacen falta para señas con movimiento."],
+  ["Clasificación","scikit-learn: k-NN o MLP","Suficiente para letras estáticas. LSTM como reto para señas dinámicas."],
+  ["Texto y voz","Subtítulo en pantalla · pyttsx3","La voz se genera en el receptor, así no se transmite audio."],
+  ["Empaquetado","JSON {seña, confianza, t}","Comparar contra enviar los landmarks crudos o el video."],
+  ["Red de datos","Broker Mosquitto · paho-mqtt","Probar QoS 0 y QoS 1 a través del switch y el router del laboratorio."],
+  ["Receptor","Página web o script suscriptor","Muestra el texto, el historial y lo lee en voz alta."]],
+ loop:null,
+ mejoras:[
+  ["Comparación de pesos explícita","Es el aporte de redes de datos: medir bytes por segundo de video, landmarks y texto con Wireshark."],
+  ["Dónde clasificar","Clasificar en el emisor (edge) y enviar texto, o en el receptor y enviar landmarks. Que el equipo justifique su elección."],
+  ["Dataset propio y validación","Grabar a compañeros con consentimiento y validar las señas con un intérprete o una asociación de personas sordas."],
+  ["Latencia medida","Incluir un timestamp en cada mensaje MQTT para calcular el retardo en el receptor."]],
+ si:["5 a 10 señas estáticas del alfabeto LSC.","Dataset propio de unas 100 muestras por seña.","MQTT dentro de la LAN del laboratorio.","Medición de bytes por segundo de cada formato."],
+ no:["Traducir frases completas o la gramática de LSC.","Entrenar Transformers desde cero.","Publicar una app móvil."],
+ kit:["2 portátiles con webcam","Python: mediapipe, scikit-learn, paho-mqtt","Broker Mosquitto","Switch y router del laboratorio, Wireshark"],
+ guia:[
+  ["Fundamentos de LSC y de la comunidad sorda; qué es un landmark.","Mapa conceptual y lista de señas"],
+  ["MediaPipe: dibujar los 21 puntos en vivo.","Script landmarks.py"],
+  ["Construcción del dataset: guardar muestras en CSV.","dataset.csv"],
+  ["Entrenamiento del clasificador y matriz de confusión.","modelo.pkl y precisión"],
+  ["Reconocimiento en vivo con subtítulos.","Demo local"],
+  ["Red: Mosquitto, publicar y suscribir entre 2 PC.","Captura Wireshark del tráfico MQTT"],
+  ["Comparación de formatos: video, landmarks, texto.","Tabla y gráfica de bytes/s"],
+  ["Receptor con texto y voz.","Receptor funcionando"],
+  ["Pruebas con usuarios y ajustes.","Registro de pruebas"],
+  ["Socialización de resultados.","Informe técnico y sustentación"]],
+ rubrica:[["Reconocimiento de señas con precisión medida",25],["Transmisión por red (MQTT o sockets)",20],["Análisis comparativo del peso de los datos",25],["Receptor y accesibilidad",15],["Informe y sustentación",15]],
+ refs:[
+  ["Lugaresi, C. et al. (2019). MediaPipe: A Framework for Building Perception Pipelines. arXiv:1906.08172.","Presenta MediaPipe como flujo de procesamiento por etapas, igual a la arquitectura del proyecto.","https://arxiv.org/abs/1906.08172"],
+  ["Zhang, F. et al. (2020). MediaPipe Hands: On-device Real-time Hand Tracking. arXiv:2006.10214.","Describe el modelo de 21 puntos que usarán los estudiantes.","https://arxiv.org/abs/2006.10214"],
+  ["Reconocimiento de lengua de señas colombiana mediante redes neuronales convolucionales y captura de movimiento. Revista Tecnura (Universidad Distrital).","Antecedente colombiano directo sobre LSC.","https://revistas.udistrital.edu.co/index.php/Tecnura/article/view/19213"],
+  ["Reconocimiento de la lengua de señas colombiana mediante redes neuronales con memoria a largo y corto plazo (2025). Revista Facultad de Ingeniería, 34(71).","Uso de LSTM para señas colombianas; guía para el reto opcional.","http://www.scielo.org.co/scielo.php?pid=S0121-11292025000118059&script=sci_arttext&tlng=es"],
+  ["Rastgoo, R., Kiani, K. y Escalera, S. (2021). Sign Language Recognition: A Deep Survey. Expert Systems with Applications, 164.","Panorama de técnicas de reconocimiento de lengua de señas.","https://doi.org/10.1016/j.eswa.2020.113794"],
+  ["Hunkeler, U., Truong, H. L. y Stanford-Clark, A. (2008). MQTT-S: A Publish/Subscribe Protocol for Wireless Sensor Networks. COMSWARE.","Fundamento del modelo publicar/suscribir y su bajo overhead.","https://doi.org/10.1109/COMSWA.2008.4554519"]]
+},
+{
+ id:"p3", num:"03", short:"Agente aeroespacial",
+ title:"Prototipo inicial de agente inteligente de ingeniería aeroespacial en la era de los sistemas teleinformáticos",
+ enunciado:[
+  "Un centro de control vigila un pequeño satélite (CubeSat) en órbita baja que solo es visible desde la estación terrena durante algunos minutos por órbita. El equipo construirá un prototipo de agente inteligente que lee la telemetría del satélite (simulada o tomada de fuentes abiertas), detecta anomalías, decide una acción y la comunica.",
+  "El agente debe tener en cuenta que el enlace no siempre está disponible y que el retardo crece con la distancia: lo que funciona en órbita baja no sirve para una misión a Marte."],
+ pregunta:"¿Cómo debe decidir un agente inteligente cuándo actuar por sí mismo y cuándo esperar al operador, según la disponibilidad y el retardo del enlace?",
+ objetivos:["Simular telemetría (batería, temperatura, actitud) y almacenarla.","Implementar un agente percibir → razonar → actuar con reglas y detección de anomalías.","Simular un enlace con ventanas de contacto y almacenamiento con reenvío (idea DTN).","Construir un panel para el operador con alertas."],
+ simIntro:"CubeSat en órbita con estación terrena. Inyecte una falla y observe cómo decide el agente, cómo se acumulan los mensajes cuando no hay enlace y qué cambia con el retardo de Luna o Marte.",
+ capas:[
+  ["Fuentes de datos","Telemetría simulada en Python · API de posición de la ISS · TLE de CelesTrak","Empezar con datos simulados; los reales complementan."],
+  ["Adquisición y preprocesamiento","pandas","Limpiar, unificar unidades y sincronizar por timestamp."],
+  ["Almacenamiento","SQLite o CSV; InfluxDB como reto","Una base sencilla basta para el prototipo."],
+  ["Módulo de IA","z-score, Isolation Forest (scikit-learn)","Detección de anomalías explicable. LSTM queda como lectura."],
+  ["Motor de razonamiento","Reglas SI–ENTONCES + LLM opcional","El LLM solo redacta la explicación de la alerta; las decisiones críticas las toman las reglas."],
+  ["Comunicación teleinformática","MQTT con QoS 1 y cola store-and-forward","Simular ventanas de contacto y retardo entre el equipo satélite y el equipo estación."],
+  ["Interfaz de operador","Streamlit o página web","Gráficas de telemetría, estado del enlace y alertas."],
+  ["Acción y control","Comandos simulados: modo seguro, calefactor, reorientar","El comando modifica la telemetría simulada y el agente observa el efecto."]],
+ loop:"Del módulo 8 se vuelve al 1: el agente observa el efecto de su acción y cierra el ciclo.",
+ mejoras:[
+  ["Convertir el flujo en ciclo","Un agente percibe, decide, actúa y vuelve a percibir. El diagrama lineal no muestra eso."],
+  ["Tipo de agente","Clasificarlo según Russell y Norvig: reactivo simple o basado en modelo."],
+  ["Dónde vive el agente","A bordo o en tierra. Con retardos grandes debe estar a bordo; esa decisión es el núcleo teleinformático."],
+  ["Comunicación antes del operador","La telemetría viaja por el enlace (6) antes de llegar a la interfaz (7)."]],
+ si:["Satélite simulado con 3 o 4 variables.","3 tipos de anomalía.","Agente de reglas con detección estadística.","Enlace simulado con ventanas y retardo, y un dashboard."],
+ no:["Control de hardware espacial real.","Propagación orbital precisa propia (se usa una librería si hace falta).","Entrenar o ajustar LLM."],
+ kit:["2 portátiles en red (satélite y estación)","Python: pandas, scikit-learn, paho-mqtt, streamlit","Internet para APIs públicas","Opcional: Raspberry Pi con DHT11 y MPU6050 como CubeSat de mesa"],
+ guia:[
+  ["Fundamentos: órbita baja, telemetría, qué es un agente.","Mapa conceptual"],
+  ["Simulador de telemetría en Python.","telemetria.py y CSV"],
+  ["Datos abiertos: posición de la ISS o TLE.","Script y gráfica"],
+  ["Almacenamiento y visualización básica.","Base SQLite y gráficas"],
+  ["Detección de anomalías por umbral y z-score.","Reporte de detecciones"],
+  ["Motor de reglas del agente.","agente.py"],
+  ["Enlace entre 2 equipos: MQTT, ventanas de contacto, cola.","Captura del tráfico"],
+  ["Dashboard del operador.","Dashboard con alertas"],
+  ["Escenarios LEO, Luna y Marte.","Tabla de resultados"],
+  ["Socialización de resultados.","Informe técnico y sustentación"]],
+ rubrica:[["Simulación y manejo de datos",20],["Agente: reglas y detección de anomalías",25],["Comunicación y enlace simulado",20],["Dashboard y alertas",15],["Informe, análisis de escenarios y sustentación",20]],
+ refs:[
+  ["Russell, S. y Norvig, P. (2021). Artificial Intelligence: A Modern Approach (4.ª ed.). Pearson.","Definición y tipos de agentes inteligentes (capítulo 2).","https://aima.cs.berkeley.edu/"],
+  ["Hundman, K. et al. (2018). Detecting Spacecraft Anomalies Using LSTMs and Nonparametric Dynamic Thresholding. KDD.","Detección de anomalías en telemetría real de la NASA (SMAP y MSL), con dataset público.","https://arxiv.org/abs/1802.04431"],
+  ["Burleigh, S. et al. (2003). Delay-Tolerant Networking: An Approach to Interplanetary Internet. IEEE Communications Magazine, 41(6).","Base de la red tolerante a retardos y del almacenamiento con reenvío.","https://doi.org/10.1109/MCOM.2003.1204759"],
+  ["Yao, S. et al. (2023). ReAct: Synergizing Reasoning and Acting in Language Models. ICLR.","Patrón razonar → actuar de los agentes con LLM.","https://arxiv.org/abs/2210.03629"],
+  ["Wang, L. et al. (2024). A Survey on Large Language Model based Autonomous Agents. Frontiers of Computer Science, 18.","Arquitectura de agentes: perfil, memoria, planificación y acción.","https://doi.org/10.1007/s11704-024-40231-1"]]
+},
+{
+ id:"p4", num:"04", short:"Sentimientos empresariales",
+ title:"Sistemas teleinformáticos en el análisis de sentimientos del sector empresarial por medio de la comunicación escrita",
+ enunciado:[
+  "Una empresa recibe cada día cientos de correos, chats y tickets de sus clientes. El equipo construirá un sistema que recoja estos mensajes, los transmita a un servidor de análisis, los tokenice, clasifique su sentimiento (positivo, negativo o neutro) y muestre indicadores para la toma de decisiones.",
+  "También medirá el peso de los datos: cuántos bytes y tokens ocupa cada mensaje, cuánto suman los encabezados de cada protocolo y cómo cambia el tiempo de transmisión con la compresión y el volumen."],
+ pregunta:"¿Cuánto pesa, en bytes y en tiempo de transmisión, el análisis de sentimientos de la comunicación escrita de una empresa, y cómo influyen el protocolo y la compresión?",
+ objetivos:["Construir un corpus de mensajes empresariales ficticios o anonimizados.","Aplicar tokenización y limpieza de texto en español.","Clasificar el sentimiento con un léxico y con un modelo preentrenado.","Medir bytes, tokens y overhead de HTTP frente a MQTT."],
+ simIntro:"Mensajes de ejemplo de una empresa ficticia. Vea los tokens, el sentimiento calculado con un léxico y cuánto pesa transmitirlos según el protocolo y la red.",
+ capas:[
+  ["Fuentes de texto","Corpus ficticio o reseñas públicas en español; formulario como canal de clientes","Nunca usar datos personales reales sin anonimizar."],
+  ["Captura y transmisión","Flask (HTTP POST con JSON) y MQTT","Montar ambos para compararlos; Kafka se explica como concepto."],
+  ["Preprocesamiento NLP","spaCy o NLTK; tokenizador de subpalabras de BETO","Minúsculas, signos, stopwords. Comparar tokens por palabras y por subpalabras."],
+  ["Modelo de sentimientos","Léxico (línea base) y pysentimiento (RoBERTuito)","Modelo preentrenado sin ajuste fino. El léxico ayuda a entender qué hace el modelo."],
+  ["Métricas y peso de los datos","len(texto.encode()), conteo de tokens, Wireshark, gzip","Medir antes y después: texto completo frente a solo {id, sentimiento, puntaje}."],
+  ["Almacenamiento y agregación","SQLite","Tabla de mensajes y resultados; KPIs por día y por canal."],
+  ["Visualización y decisiones","Streamlit","Porcentaje por sentimiento y alertas de mensajes muy negativos."]],
+ loop:null,
+ mejoras:[
+  ["Medir antes y después","Comparar el peso de enviar el texto completo con enviar solo el resultado del análisis."],
+  ["Línea base simple","Un clasificador por léxico permite comparar contra BERT y explicar los errores."],
+  ["Ética y datos personales","Incluir la Ley 1581 de 2012 de protección de datos y anonimizar el corpus."],
+  ["Evaluación con etiquetas","Etiquetar a mano una parte del corpus y calcular precisión y matriz de confusión."]],
+ si:["Corpus de 200 a 500 mensajes en español.","Tokenización y dos métodos de clasificación.","Transmisión HTTP y MQTT en la LAN.","Medición de bytes, tokens y latencia; dashboard."],
+ no:["Entrenar un modelo de lenguaje desde cero.","Conectarse a sistemas reales de una empresa (CRM, correo).","Detectar sarcasmo o emociones finas."],
+ kit:["2 portátiles en red","Python: spaCy, pysentimiento, flask, paho-mqtt, streamlit","Wireshark","Hoja de cálculo para etiquetar el corpus"],
+ guia:[
+  ["Fundamentos: comunicación escrita en la empresa, NLP, sentimiento.","Mapa conceptual"],
+  ["Corpus: escribir y etiquetar mensajes a mano.","corpus.csv etiquetado"],
+  ["Tokenización y limpieza; contar tokens y bytes.","Notebook de preprocesamiento"],
+  ["Clasificador por léxico.","Precisión de la línea base"],
+  ["Modelo preentrenado (pysentimiento).","Comparación de precisión"],
+  ["Servidor Flask que recibe mensajes y responde el sentimiento.","API funcionando entre 2 PC"],
+  ["MQTT y comparación de protocolos con Wireshark.","Tabla de overhead"],
+  ["Compresión y volumen: 100, 1 000 y 10 000 mensajes.","Gráficas"],
+  ["Dashboard de KPIs.","Dashboard"],
+  ["Socialización de resultados.","Informe técnico y sustentación"]],
+ rubrica:[["Corpus y preprocesamiento",20],["Clasificación y evaluación",25],["Transmisión y medición del peso de los datos",25],["Dashboard",15],["Informe, ética y sustentación",15]],
+ refs:[
+  ["Pang, B., Lee, L. y Vaithyanathan, S. (2002). Thumbs up? Sentiment Classification using Machine Learning Techniques. EMNLP.","Trabajo fundacional de clasificación de sentimientos con aprendizaje automático.","https://arxiv.org/abs/cs/0205070"],
+  ["Devlin, J. et al. (2019). BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding. NAACL.","Modelo base de los clasificadores modernos que usará el proyecto.","https://arxiv.org/abs/1810.04805"],
+  ["Sennrich, R., Haddow, B. y Birch, A. (2016). Neural Machine Translation of Rare Words with Subword Units. ACL.","Tokenización por subpalabras (BPE): por qué un texto tiene más tokens que palabras.","https://arxiv.org/abs/1508.07909"],
+  ["Kudo, T. y Richardson, J. (2018). SentencePiece: A Simple and Language Independent Subword Tokenizer. EMNLP.","Tokenizador usado por muchos modelos; útil para medir tokens.","https://arxiv.org/abs/1808.06226"],
+  ["Cañete, J. et al. (2020). Spanish Pre-Trained BERT Model and Evaluation Data (BETO). PML4DC, ICLR.","BERT entrenado en español.","https://arxiv.org/abs/2308.02976"],
+  ["Pérez, J. M., Giudici, J. C. y Luque, F. (2021). pysentimiento: A Python Toolkit for Sentiment Analysis and SocialNLP tasks. arXiv:2106.09462.","Librería lista para analizar sentimiento en español.","https://arxiv.org/abs/2106.09462"],
+  ["Hutto, C. y Gilbert, E. (2014). VADER: A Parsimonious Rule-based Model for Sentiment Analysis of Social Media Text. ICWSM.","Método por léxico y reglas, como la línea base de la simulación.","https://doi.org/10.1609/icwsm.v8i1.14550"]]
+}];
+
+const $ = (s,r=document)=>r.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const css = n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+function render(p){
+  const sec = (id,k,h,inner)=>`<section id="${p.id}-${id}"><div class="kicker">${k}</div><h2>${h}</h2>${inner}</section>`;
+  return `<div class="proj">
+  <nav class="toc" aria-label="Secciones">
+    ${[["enunciado","Enunciado"],["sim","Simulación"],["arq","Arquitectura"],["alcance","Alcance grado 11"],["guia","Guía por semanas"],["rubrica","Evaluación"],["refs","Artículos"]].map(([a,b])=>`<a href="#${p.id}-${a}">${b}</a>`).join("")}
+  </nav>
+  <div class="sections">
+  <section id="${p.id}-enunciado">
+    <div class="kicker">Proyecto ${p.num} · Enunciado</div>
+    <h2 class="ptitle">${esc(p.title)}</h2>
+    ${p.enunciado.map(t=>`<p>${esc(t)}</p>`).join("")}
+    <div class="question"><strong>Pregunta del proyecto</strong>${esc(p.pregunta)}</div>
+    <h3 style="margin-top:18px">Objetivos</h3>
+    <ul class="clean">${p.objetivos.map(o=>`<li>${esc(o)}</li>`).join("")}</ul>
+  </section>
+  <section id="${p.id}-sim">
+    <div class="sim" id="${p.id}-simbox">
+      <div class="sim-head"><h3 style="margin:0">Simulación</h3><p>${esc(p.simIntro)}</p></div>
+      <div id="${p.id}-simroot"></div>
+    </div>
+  </section>
+  ${sec("arq","Arquitectura técnica","Su arquitectura, con herramientas para grado 11",
+    `<p>Se mantienen los bloques del repositorio. En cada uno se indica la herramienta recomendada y una nota de alcance.</p>
+    <div class="flow">${p.capas.map((c,i)=>`<div class="stage"><div class="n">${i+1}</div><div class="body"><b>${esc(c[0])}</b><span class="tool">${esc(c[1])}</span><p>${esc(c[2])}</p></div></div>`).join("")}
+    ${p.loop?`<div class="stage"><div class="n loop">↺</div><div class="body"><b>Retroalimentación</b><p>${esc(p.loop)}</p></div></div>`:""}</div>
+    <h3 style="margin-top:16px">Ajustes recomendados</h3>
+    <div class="tips">${p.mejoras.map(m=>`<div class="tip"><b>${esc(m[0])}</b>${esc(m[1])}</div>`).join("")}</div>`)}
+  ${sec("alcance","Alcance","Qué es realista para grado 11",
+    `<div class="two">
+      <div class="box yes"><h3>Incluye</h3><ul class="clean">${p.si.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div class="box no"><h3>Fuera de alcance</h3><ul class="clean">${p.no.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+      <div class="box kit"><h3>Materiales</h3><ul class="clean">${p.kit.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    </div>`)}
+  ${sec("guia","Guía","Plan de 10 semanas",
+    `<div class="tablewrap"><table><thead><tr><th>Semana</th><th>Actividad</th><th>Entregable</th></tr></thead><tbody>
+    ${p.guia.map((g,i)=>`<tr><td class="w">${i+1}</td><td>${esc(g[0])}</td><td>${esc(g[1])}</td></tr>`).join("")}</tbody></table></div>`)}
+  ${sec("rubrica","Evaluación","Criterios y pesos",
+    `<div class="tablewrap"><table><thead><tr><th>Criterio</th><th>Peso</th></tr></thead><tbody>
+    ${p.rubrica.map(r=>`<tr><td>${esc(r[0])}</td><td class="w">${r[1]} %</td></tr>`).join("")}</tbody></table></div>`)}
+  ${sec("refs","Soporte científico","Artículos recomendados",
+    `<ul class="refs">${p.refs.map(r=>`<li><div class="cite">${esc(r[0])}</div><div class="why">${esc(r[1])}</div><a href="${r[2]}" target="_blank" rel="noopener">${esc(r[2])}</a></li>`).join("")}</ul>`)}
+  </div></div>`;
+}
+
+/* ---------- utilidades canvas ---------- */
+function setupCanvas(c,w,h){const d=window.devicePixelRatio||1;c.width=w*d;c.height=h*d;const x=c.getContext("2d");x.setTransform(d,0,0,d,0,0);return x;}
+function colors(){return{bg:css("--surface"),sunk:css("--sunk"),fg:css("--fg"),muted:css("--muted"),line:css("--line"),acc:css("--accent"),sig:css("--signal"),ok:css("--ok"),bad:css("--bad"),accs:css("--accent-soft")};}
+function node(x,ctx,cx,cy,label,sub,C,col){ctx.fillStyle=C.bg;ctx.strokeStyle=col||C.acc;ctx.lineWidth=1.5;ctx.beginPath();ctx.roundRect(cx-42,cy-18,84,36,7);ctx.fill();ctx.stroke();ctx.fillStyle=C.fg;ctx.font="600 11px "+css("--f-body");ctx.textAlign="center";ctx.fillText(label,cx,cy-2);ctx.fillStyle=C.muted;ctx.font="10px "+css("--f-mono");ctx.fillText(sub,cx,cy+11);}
+const fmtB = b=> b>=1e6? (b/1e6).toFixed(2)+" MB" : b>=1e3? (b/1e3).toFixed(1)+" kB" : Math.round(b)+" B";
+const fmtbps = b=> b>=1e6? (b/1e6).toFixed(2)+" Mbps" : b>=1e3? (b/1e3).toFixed(1)+" kbps" : Math.round(b)+" bps";
+
+/* ================= SIM 1: Streaming YOLOv8 ================= */
+function sim1(root){
+  root.innerHTML=`
+  <div class="controls">
+    <div class="ctl"><label for="s1res">Resolución</label><select id="s1res"><option value="480">854×480</option><option value="720" selected>1280×720</option><option value="1080">1920×1080</option></select></div>
+    <div class="ctl"><label for="s1fps">FPS</label><select id="s1fps"><option>15</option><option selected>30</option></select></div>
+    <div class="ctl"><label for="s1codec">Códec</label><select id="s1codec"><option value="h264" selected>H.264</option><option value="h265">H.265</option><option value="mjpeg">MJPEG</option></select></div>
+    <div class="ctl"><label for="s1qos">QoS para video</label><select id="s1qos"><option value="0">Desactivado</option><option value="1" selected>DSCP AF41</option></select></div>
+    <div class="ctl"><label for="s1cong">Tráfico de otros equipos: <span id="s1congv">40</span> %</label><input id="s1cong" type="range" min="0" max="95" value="40"></div>
+    <div class="ctl"><label for="s1link">Enlace router</label><select id="s1link"><option value="10">10 Mbps</option><option value="20" selected>20 Mbps</option><option value="100">100 Mbps</option></select></div>
+  </div>
+  <div class="sim-grid">
+    <div class="panel"><h4>1–5 · Cámara + YOLOv8n</h4><canvas id="s1cam"></canvas></div>
+    <div class="panel"><h4>9 · Lo que ve el cliente</h4><canvas id="s1cli"></canvas></div>
+  </div>
+  <div class="panel"><h4>6–8 · Red: servidor → switch → router → cliente</h4><canvas id="s1net"></canvas></div>
+  <div class="stats" id="s1stats"></div>
+  <p class="note">Valores aproximados para fines didácticos. En el laboratorio se reemplazan por mediciones reales con Wireshark e iperf3.</p>`;
+  const cam=$("#s1cam",root),cli=$("#s1cli",root),net=$("#s1net",root);
+  const W=320,H=180; const cx=setupCanvas(cam,W,H), lx=setupCanvas(cli,W,H), nx=setupCanvas(net,760,150);
+  const objs=[{t:"persona",x:30,y:70,w:26,h:62,vx:.6},{t:"persona",x:210,y:80,w:24,h:58,vx:-.45},{t:"auto",x:-60,y:128,w:72,h:34,vx:1.1},{t:"perro",x:150,y:140,w:30,h:20,vx:.3}];
+  const hist=[]; let packets=[], t=0, stats={};
+  const g=id=>$(id,root);
+  function calc(){
+    const res=+g("#s1res").value, fps=+g("#s1fps").value, codec=g("#s1codec").value, qos=g("#s1qos").value==="1", cong=+g("#s1cong").value/100, link=+g("#s1link").value;
+    const dims={480:[854,480],720:[1280,720],1080:[1920,1080]}[res];
+    const bpp={h264:.07,h265:.045,mjpeg:.6}[codec];
+    const br=dims[0]*dims[1]*fps*bpp/1e6; // Mbps
+    const avail = qos? link*(1-cong*0.25) : link*(1-cong);
+    const util = br/Math.max(avail,0.01);
+    const loss = Math.max(0, 1-avail/br);
+    const inf={480:35,720:48,1080:72}[res];
+    const enc = codec==="mjpeg"?6:(codec==="h265"?22:12);
+    const queue = Math.min(400, util<1? (util/(1-util))*4 : 400) * (qos?0.35:1);
+    const lat = 1000/fps + inf + enc + 1 + 2 + queue + 15;
+    stats={br,avail,loss,lat,inf,queue,util,fps,codec};
+    g("#s1congv").textContent=Math.round(cong*100);
+    const st=[["Bitrate del video",br.toFixed(2)+" Mbps",""],["Disponible para video",avail.toFixed(2)+" Mbps",""],["Uso del enlace",Math.min(999,util*100).toFixed(0)+" %",util>1?"bad":util>.8?"warn":"ok"],["Pérdida de paquetes",(loss*100).toFixed(1)+" %",loss>0.02?"bad":loss>0?"warn":"ok"],["Inferencia YOLOv8n",inf+" ms",""],["Latencia extremo a extremo",Math.round(lat)+" ms",lat>400?"bad":lat>200?"warn":"ok"]];
+    g("#s1stats").innerHTML=st.map(s=>`<div class="stat ${s[2]}"><span>${s[0]}</span><b>${s[1]}</b></div>`).join("");
+  }
+  root.addEventListener("input",calc); calc();
+  function drawScene(ctx,frame,C,boxes,glitch){
+    ctx.fillStyle=C.sunk;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle=C.line;ctx.fillRect(0,150,W,30);
+    ctx.strokeStyle=C.muted;ctx.setLineDash([10,8]);ctx.beginPath();ctx.moveTo(0,165);ctx.lineTo(W,165);ctx.stroke();ctx.setLineDash([]);
+    frame.forEach(o=>{
+      ctx.fillStyle=C.muted;
+      if(o.t==="persona"){ctx.beginPath();ctx.arc(o.x+o.w/2,o.y+8,7,0,7);ctx.fill();ctx.fillRect(o.x+5,o.y+16,o.w-10,o.h-16);}
+      else if(o.t==="auto"){ctx.beginPath();ctx.roundRect(o.x,o.y+8,o.w,o.h-14,5);ctx.fill();ctx.fillRect(o.x+14,o.y,o.w-30,12);ctx.fillStyle=C.fg;ctx.beginPath();ctx.arc(o.x+14,o.y+o.h-5,5,0,7);ctx.arc(o.x+o.w-14,o.y+o.h-5,5,0,7);ctx.fill();}
+      else{ctx.beginPath();ctx.ellipse(o.x+o.w/2,o.y+12,o.w/2,6,0,0,7);ctx.fill();ctx.fillRect(o.x+o.w-6,o.y+2,7,7);}
+      if(boxes){ctx.strokeStyle=C.sig;ctx.lineWidth=1.5;ctx.strokeRect(o.x-2,o.y-2,o.w+4,o.h+4);
+        const lab=o.t+" "+o.c.toFixed(2);ctx.font="600 9px "+css("--f-mono");const tw=ctx.measureText(lab).width+6;
+        ctx.fillStyle=C.sig;ctx.fillRect(o.x-2,o.y-14,tw,12);ctx.fillStyle=C.bg;ctx.textAlign="left";ctx.fillText(lab,o.x+1,o.y-5);}
+    });
+    const n=frame.filter(o=>o.t==="persona").length;
+    ctx.fillStyle=C.bg;ctx.fillRect(6,6,104,18);ctx.fillStyle=C.fg;ctx.font="600 10px "+css("--f-mono");ctx.textAlign="left";ctx.fillText("personas: "+n,12,19);
+    if(glitch>0){for(let i=0;i<glitch;i++){ctx.fillStyle=Math.random()<.5?C.acc:C.line;ctx.globalAlpha=.75;ctx.fillRect(Math.floor(Math.random()*20)*16,Math.floor(Math.random()*12)*16,16*(1+Math.floor(Math.random()*3)),16);}ctx.globalAlpha=1;}
+  }
+  function loop(ts){
+    if(!root.isConnected) return;
+    if(root.offsetParent!==null){
+    const C=colors(); t++;
+    objs.forEach(o=>{o.x+=o.vx;if(o.x>W+20)o.x=-o.w-10;if(o.x<-o.w-20)o.x=W+10;o.c=.82+.15*Math.abs(Math.sin(t/40+o.w));});
+    const frame=objs.map(o=>({...o})); const now=performance.now();
+    hist.push({f:frame,ts:now});
+    while(hist.length>400)hist.shift();
+    cx.clearRect(0,0,W,H);drawScene(cx,frame,C,true,0);
+    cx.fillStyle=C.bad;cx.beginPath();cx.arc(W-14,14,4,0,7);cx.fill();cx.fillStyle=C.fg;cx.font="9px "+css("--f-mono");cx.textAlign="right";cx.fillText("EN VIVO",W-22,17);
+    const target=now-stats.lat; let pick=hist[0]; for(const h of hist){if(h.ts<=target)pick=h;else break;}
+    const skip = 60/stats.fps; if(t%Math.round(skip)===0||!cli._f){cli._f=pick.f;}
+    lx.clearRect(0,0,W,H);drawScene(lx,cli._f,C,true,Math.round(stats.loss*40*Math.random()));
+    lx.fillStyle=C.bg;lx.fillRect(W-120,6,114,18);lx.fillStyle=C.fg;lx.font="600 10px "+css("--f-mono");lx.textAlign="right";lx.fillText("retardo "+Math.round(stats.lat)+" ms",W-10,19);
+    // red
+    const NW=760, pts=[[70,"Servidor","YOLO · VLAN10"],[270,"Switch","2960 · 802.1Q"],[470,"Router","R-o-a-S · NAT"],[680,"Cliente","VLC · VLAN20"]];
+    nx.clearRect(0,0,NW,150);nx.fillStyle=C.sunk;nx.fillRect(0,0,NW,150);
+    nx.strokeStyle=C.line;nx.lineWidth=3;nx.beginPath();nx.moveTo(70,70);nx.lineTo(680,70);nx.stroke();
+    nx.fillStyle=C.muted;nx.font="10px "+css("--f-mono");nx.textAlign="center";
+    nx.fillText("GigE",170,58);nx.fillText("troncal",370,58);nx.fillText("enlace "+g("#s1link").value+" Mbps",575,58);
+    const rate=Math.min(6,1+stats.br/2);
+    if(Math.random()<rate/6){packets.push({x:70,v:2.2,dead:Math.random()<stats.loss,c:Math.random()<.18?"o":"v"});}
+    if(Math.random()<+g("#s1cong").value/150){packets.push({x:270,v:2,dead:false,c:"o"});}
+    packets.forEach(p=>{p.x+=p.v*(p.x>440&&p.x<500?(1/(1+stats.queue/40)):1);if(p.dead&&p.x>470){p.drop=(p.drop||0)+1;}});
+    packets=packets.filter(p=>p.x<680&&(!p.drop||p.drop<25));
+    packets.forEach(p=>{nx.globalAlpha=p.drop?1-p.drop/25:1;nx.fillStyle=p.drop?C.bad:(p.c==="v"?C.sig:C.muted);nx.beginPath();nx.arc(p.x,p.drop?70+p.drop:70,4,0,7);nx.fill();nx.globalAlpha=1;});
+    pts.forEach(p=>node(0,nx,p[0],70,p[1],p[2],C,p[1]==="Router"&&stats.util>1?C.bad:null));
+    nx.textAlign="left";nx.font="10px "+css("--f-body");
+    nx.fillStyle=C.sig;nx.beginPath();nx.arc(20,128,4,0,7);nx.fill();nx.fillStyle=C.fg;nx.fillText("paquete de video",30,131);
+    nx.fillStyle=C.muted;nx.beginPath();nx.arc(140,128,4,0,7);nx.fill();nx.fillStyle=C.fg;nx.fillText("otro tráfico",150,131);
+    nx.fillStyle=C.bad;nx.beginPath();nx.arc(240,128,4,0,7);nx.fill();nx.fillStyle=C.fg;nx.fillText("descartado en la cola del router",250,131);
+    nx.fillStyle=C.muted;nx.textAlign="right";nx.fillText("cola del router: "+Math.round(stats.queue)+" ms",NW-12,131);
+    }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+
+/* ================= SIM 2: Señas MediaPipe ================= */
+function sim2(root){
+  const SIGNS={A:[0,0,0,0,1],B:[1,1,1,1,0],L:[1,0,0,0,1],V:[1,1,0,0,0],Y:[0,0,0,1,1],W:[1,1,1,0,0]}; // index,middle,ring,pinky,thumb
+  root.innerHTML=`
+  <div class="controls">
+    <div class="ctl"><label for="s2sign">Seña que hace la persona</label><select id="s2sign">${Object.keys(SIGNS).map(k=>`<option ${k==="L"?"selected":""}>${k}</option>`).join("")}</select></div>
+    <div class="ctl"><label for="s2auto">Modo</label><select id="s2auto"><option value="1" selected>Deletrear automáticamente</option><option value="0">Manual</option></select></div>
+    <div class="ctl"><label for="s2fmt">Qué se transmite</label><select id="s2fmt"><option value="raw">Video sin comprimir</option><option value="h264">Video H.264</option><option value="json">Landmarks en JSON</option><option value="bin">Landmarks binarios</option><option value="txt" selected>Solo texto reconocido</option></select></div>
+    <div class="ctl"><label for="s2qos">MQTT QoS</label><select id="s2qos"><option value="0">0 · a lo sumo una vez</option><option value="1" selected>1 · al menos una vez</option><option value="2">2 · exactamente una vez</option></select></div>
+    <div class="ctl"><label for="s2loss">Pérdida en la red: <span id="s2lossv">10</span> %</label><input id="s2loss" type="range" min="0" max="50" value="10"></div>
+  </div>
+  <div class="sim-grid">
+    <div class="panel"><h4>1–5 · MediaPipe: 21 puntos y clasificación</h4><canvas id="s2hand"></canvas><div class="stats" style="margin-top:8px" id="s2cls"></div></div>
+    <div class="panel"><h4>7–9 · MQTT hacia el receptor</h4><canvas id="s2net"></canvas>
+      <h4 style="margin-top:10px">Receptor (texto y voz)</h4><div class="code" id="s2rx" style="min-height:44px;white-space:pre-wrap"></div></div>
+  </div>
+  <div class="sim-grid">
+    <div class="panel"><h4>Peso de cada formato a 30 FPS</h4><div class="bars" id="s2bars"></div><p class="note" style="margin-top:6px">Escala logarítmica. Los landmarks pesan cientos de veces menos que el video.</p></div>
+    <div class="panel"><h4>Mensaje MQTT publicado</h4><div class="code" id="s2pay"></div></div>
+  </div>
+  <div class="stats" id="s2stats"></div>`;
+  const g=id=>$(id,root);
+  const hc=g("#s2hand"), nc=g("#s2net"); const hx=setupCanvas(hc,320,260), nx=setupCanvas(nc,320,120);
+  let cur=[0,0,0,0,1].map(Number), t=0, word="HOLA", seq="LAVYBW", si=0, holdT=0, rx="", sent=0, delivered=0, dup=0, ctrl=0, pk=[], lastSent="";
+  const target=()=>SIGNS[g("#s2sign").value];
+  function landmarks(st){
+    // 21 puntos [x,y,z] normalizados 0..1, orden de MediaPipe Hands
+    const wx=.5+.01*Math.sin(t/30), wy=.9, n=()=>(Math.random()-.5)*.003;
+    const pts=[[wx,wy,0]];
+    // pulgar: 1..4
+    const te=st[4]; let a=-2.45+(1-te)*1.75, x=wx-.08, y=wy-.07;
+    pts.push([x,y,0]);
+    [.085,.07,.06].forEach((L,j)=>{const k=j===0?1:(1-te*.0);x+=Math.cos(a)*L*(te>.5?1:.8);y+=Math.sin(a)*L*(te>.5?1:.8);a+=(1-te)*.35;pts.push([x+n(),y+n(),0]);});
+    // índice, medio, anular, meñique: 5..20
+    const mcp=[[-.115,-.29],[-.04,-.31],[.035,-.3],[.105,-.27]], lens=[[.11,.07,.06],[.12,.08,.065],[.11,.075,.06],[.085,.06,.05]], spr=[-.12,-.03,.05,.15];
+    for(let f=0;f<4;f++){
+      const e=st[f]; let x=wx+mcp[f][0], y=wy+mcp[f][1], th=0; const a0=-Math.PI/2+spr[f];
+      pts.push([x,y,0]);
+      lens[f].forEach(L=>{th+=(1-e)*1.25; x+=Math.cos(a0)*L*Math.cos(th); y+=Math.sin(a0)*L*Math.cos(th); pts.push([x+n(),y+n(),+(L*Math.sin(th)).toFixed(3)]);});
+    }
+    return pts;
+  }
+  function classify(pts){
+    const w=pts[0]; const d=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
+    const fin=[[8,6],[12,10],[16,14],[20,18]].map(([tip,pip])=>d(pts[tip],w)>d(pts[pip],w)*1.12?1:0);
+    const thumb = d(pts[4],pts[17])>0.2?1:0;
+    const v=[...fin,thumb]; let best=null,bs=-1; const scores={};
+    for(const k in SIGNS){const s=SIGNS[k].reduce((a,x,i)=>a+(x===v[i]?1:0),0)/5;scores[k]=s;if(s>bs){bs=s;best=k;}}
+    return {best,conf:bs,v};
+  }
+  const FMT={raw:640*480*3,h264:1.5e6/8/30,json:0,bin:21*3*4+8,txt:0};
+  function loop(){
+    if(!root.isConnected) return;
+    if(root.offsetParent!==null){
+    t++; const C=colors();
+    if(g("#s2auto").value==="1"){holdT++; if(holdT>110){holdT=0;si=(si+1)%seq.length;g("#s2sign").value=seq[si];}}
+    const tg=target(); cur=cur.map((c,i)=>c+(tg[i]-c)*.08);
+    const pts=landmarks(cur); const cl=classify(pts);
+    // dibujar
+    hx.fillStyle=C.sunk;hx.fillRect(0,0,320,260);
+    const P=pts.map(p=>[p[0]*320-0, p[1]*260-0]);
+    const bones=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[0,17],[17,18],[18,19],[19,20]];
+    hx.strokeStyle=C.acc;hx.lineWidth=2.5;bones.forEach(([a,b])=>{hx.beginPath();hx.moveTo(...P[a]);hx.lineTo(...P[b]);hx.stroke();});
+    P.forEach((p,i)=>{hx.fillStyle=[4,8,12,16,20].includes(i)?C.sig:C.bg;hx.strokeStyle=C.fg;hx.lineWidth=1;hx.beginPath();hx.arc(p[0],p[1],4,0,7);hx.fill();hx.stroke();});
+    hx.fillStyle=C.muted;hx.font="9px "+css("--f-mono");hx.textAlign="left";[0,4,8,12,16,20].forEach(i=>hx.fillText(i,P[i][0]+6,P[i][1]-4));
+    hx.fillStyle=C.fg;hx.font="700 34px "+css("--f-display");hx.fillText(cl.best,14,44);
+    hx.font="10px "+css("--f-mono");hx.fillStyle=C.muted;hx.fillText("dedos extendidos [í,m,a,me,p]: "+cl.v.join(""),14,250);
+    g("#s2cls").innerHTML=`<div class="stat"><span>Seña reconocida</span><b>${cl.best}</b></div><div class="stat ${cl.conf>.9?"ok":"warn"}"><span>Confianza</span><b>${(cl.conf*100).toFixed(0)} %</b></div>`;
+    // payload
+    const fmt=g("#s2fmt").value;
+    const j={sena:cl.best,conf:+cl.conf.toFixed(2),t:Date.now()%100000};
+    const lmJson=JSON.stringify({t:j.t,lm:pts.map(p=>p.map(v=>+v.toFixed(3)))});
+    FMT.json=new TextEncoder().encode(lmJson).length; FMT.txt=new TextEncoder().encode(JSON.stringify(j)).length;
+    let pay;
+    if(fmt==="txt")pay="tópico: lsc/aula1/texto\n"+JSON.stringify(j,null,1);
+    else if(fmt==="json")pay="tópico: lsc/aula1/landmarks\n"+lmJson.slice(0,180)+"…";
+    else if(fmt==="bin")pay="tópico: lsc/aula1/lm-bin\n<"+FMT.bin+" bytes: 63 float32 + timestamp>";
+    else if(fmt==="h264")pay="tópico: lsc/aula1/video\n<cuadro H.264 ≈ "+fmtB(FMT.h264)+" en promedio>";
+    else pay="tópico: lsc/aula1/video\n<cuadro RGB 640×480 = "+fmtB(FMT.raw)+">";
+    if(t%6===0)g("#s2pay").textContent=pay;
+    const order=[["raw","Video sin comprimir"],["h264","Video H.264"],["json","Landmarks JSON"],["bin","Landmarks binarios"],["txt","Texto (JSON)"]];
+    const mx=Math.log10(FMT.raw*30);
+    if(t%10===0)g("#s2bars").innerHTML=order.map(([k,n])=>{const bps=(k==="txt"?FMT[k]*2:FMT[k]*30)*8;const w=Math.max(2,Math.log10(bps/8)/mx*100);return`<div class="bar"><span style="${k===fmt?"font-weight:700":""}">${n}</span><div class="track"><div class="fill" style="width:${w}%;${k===fmt?"":"opacity:.45"}"></div></div><span class="v">${fmtbps(bps)}</span></div>`}).join("");
+    // envío: texto cuando cambia la seña estable; otros formatos continuo
+    const qos=+g("#s2qos").value, loss=+g("#s2loss").value/100; g("#s2lossv").textContent=Math.round(loss*100);
+    const sendText = cl.conf>.9 && cl.best!==lastSent && holdT>50;
+    if(fmt==="txt"? sendText : t%8===0){
+      if(fmt==="txt")lastSent=cl.best;
+      sent++; const lost=Math.random()<loss;
+      pk.push({x:30,lost,qos,txt:fmt==="txt"?cl.best:null,retry:0});
+      ctrl+= qos===0?0: qos===1?1:3;
+    }
+    nx.fillStyle=C.sunk;nx.fillRect(0,0,320,120);
+    nx.strokeStyle=C.line;nx.lineWidth=3;nx.beginPath();nx.moveTo(30,55);nx.lineTo(290,55);nx.stroke();
+    node(0,nx,40,55,"Emisor","edge",C);node(0,nx,160,55,"Broker","Mosquitto",C);node(0,nx,280,55,"Receptor","suscriptor",C);
+    pk.forEach(p=>{p.x+=2.4; if(p.lost&&p.x>100&&!p.dropped){p.dropped=true;}
+      if(p.dropped){p.dy=(p.dy||0)+1.2; if(p.dy>22 && p.qos>0 && !p.re){p.re=true;}}});
+    const keep=[];
+    pk.forEach(p=>{
+      if(p.re){ // retransmisión
+        keep.push({x:30,lost:Math.random()<loss,qos:p.qos,txt:p.txt,retry:p.retry+1}); return;}
+      if(p.dropped && p.dy>22){return;}
+      if(p.x>=280){delivered++; if(p.qos===1 && p.retry>0 && Math.random()<.25){dup++; if(p.txt) rx+=p.txt;} if(p.txt){rx+=p.txt;} return;}
+      keep.push(p);
+    });
+    pk=keep;
+    pk.forEach(p=>{nx.fillStyle=p.dropped?C.bad:(p.retry?C.acc:C.sig);nx.beginPath();nx.arc(p.x>80&&p.x<240?p.x:p.x,55+(p.dy||0),4,0,7);nx.fill();});
+    nx.font="10px "+css("--f-body");nx.textAlign="left";nx.fillStyle=C.muted;nx.fillText(qos===0?"QoS 0: lo perdido no se recupera":qos===1?"QoS 1: reenvía hasta recibir PUBACK (puede duplicar)":"QoS 2: 4 mensajes de control, sin duplicados",8,108);
+    if(rx.length>40)rx=rx.slice(-40);
+    if(t%5===0){g("#s2rx").textContent=fmt==="txt"?(rx||"esperando…")+"▌":"El receptor recibe "+(fmt.startsWith("h")||fmt==="raw"?"video":"landmarks")+" y debe clasificar la seña allá.";
+    g("#s2stats").innerHTML=`<div class="stat"><span>Mensajes publicados</span><b>${sent}</b></div><div class="stat ok"><span>Entregados</span><b>${delivered}</b></div><div class="stat ${dup?"warn":""}"><span>Duplicados (QoS 1)</span><b>${dup}</b></div><div class="stat"><span>Mensajes de control</span><b>${ctrl}</b></div>`;}
+    }
+    requestAnimationFrame(loop);
+  }
+  root.addEventListener("change",e=>{if(e.target.id==="s2fmt"||e.target.id==="s2qos"){sent=delivered=dup=ctrl=0;rx="";pk=[];} if(e.target.id==="s2sign")g("#s2auto").value="0";});
+  requestAnimationFrame(loop);
+}
+
+/* ================= SIM 3: Agente aeroespacial ================= */
+function sim3(root){
+  root.innerHTML=`
+  <div class="controls">
+    <div class="ctl"><label for="s3dist">Escenario de misión</label><select id="s3dist"><option value="0.01" selected>Órbita baja (≈10 ms)</option><option value="1.3">Luna (≈1,3 s)</option><option value="600">Marte (≈10 min)</option></select></div>
+    <div class="ctl"><label for="s3where">Dónde decide el agente</label><select id="s3where"><option value="board" selected>A bordo del satélite</option><option value="ground">En tierra (espera al operador)</option></select></div>
+    <div class="ctl"><label for="s3speed">Velocidad</label><select id="s3speed"><option value="1">×1</option><option value="2" selected>×2</option><option value="4">×4</option></select></div>
+    <div class="ctl"><label>Inyectar falla</label><div style="display:flex;gap:6px;flex-wrap:wrap"><button class="btn warn" data-f="temp">Sobretemperatura</button><button class="btn warn" data-f="att">Pérdida de actitud</button><button class="btn warn" data-f="pow">Falla de panel</button></div></div>
+  </div>
+  <div class="sim-grid">
+    <div class="panel"><h4>Órbita y enlace con la estación terrena</h4><canvas id="s3orb"></canvas></div>
+    <div class="panel"><h4>Telemetría (1–4)</h4><canvas id="s3tel"></canvas><div class="stats" id="s3now" style="margin-top:8px"></div></div>
+  </div>
+  <div class="sim-grid">
+    <div class="panel"><h4>Agente: percibir → razonar → actuar (5, 8)</h4><div class="log" id="s3log"></div></div>
+    <div class="panel"><h4>Enlace y cola DTN (6–7)</h4><div class="stats" id="s3link"></div><p class="note" style="margin-top:8px">Sin contacto, la telemetría se guarda a bordo y se reenvía en la siguiente ventana (store-and-forward). Pruebe Marte con el agente en tierra: la acción llega tarde.</p></div>
+  </div>`;
+  const g=id=>$(id,root);
+  const oc=g("#s3orb"),tc=g("#s3tel"); const ox=setupCanvas(oc,320,260), tx=setupCanvas(tc,320,150);
+  let ang=0,simT=0,s={bat:82,temp:21,att:.4},fault=null,mode="nominal",queue=0,sentQ=0,hist=[],logs=[],pendingCmd=null,lastContact=false,heater=false,decided=null;
+  const log=(cls,m)=>{const mm=Math.floor(simT/60),ss=Math.floor(simT%60);logs.push(`<span class="${cls}">[T+${String(mm).padStart(2,"0")}:${String(ss).padStart(2,"0")}] ${m}</span>`);if(logs.length>60)logs.shift();const L=g("#s3log");L.innerHTML=logs.join("\n");L.scrollTop=L.scrollHeight;};
+  log("o","Agente iniciado. Tipo: basado en modelo, con reglas SI–ENTONCES y umbral z-score.");
+  root.querySelectorAll("[data-f]").forEach(b=>b.addEventListener("click",()=>{fault=b.dataset.f;decided=null;log("e","⚠ Falla inyectada: "+b.textContent+".");}));
+  g("#s3where").addEventListener("change",()=>log("o","Configuración: el agente decide "+(g("#s3where").value==="board"?"a bordo.":"en tierra.")));
+  function mean(a){return a.reduce((x,y)=>x+y,0)/a.length}
+  function z(key){const a=hist.slice(-60).map(h=>h[key]);if(a.length<20)return 0;const m=mean(a.slice(0,-5)),sd=Math.sqrt(mean(a.slice(0,-5).map(v=>(v-m)**2)))||1;return (a[a.length-1]-m)/sd;}
+  function act(cmd){
+    if(cmd==="calefactor_off"){heater=false;fault=fault==="temp"?null:fault;mode="recuperando";}
+    if(cmd==="reorientar"){fault=fault==="att"?null:fault;mode="recuperando";}
+    if(cmd==="modo_seguro"){mode="modo seguro";fault=fault==="pow"?"pow-safe":fault;}
+    log("a","→ ACCIÓN ejecutada: "+cmd+". Observando el efecto…");
+  }
+  function loop(){
+    if(!root.isConnected) return;
+    if(root.offsetParent!==null){
+    const C=colors(), sp=+g("#s3speed").value;
+    for(let k=0;k<sp;k++){
+      ang+=0.006; simT+=1.5;
+      const sx=Math.cos(ang), inSun = sx>-0.55;
+      // dinámica
+      let charge = inSun?0.05:-0.04; if(fault==="pow")charge=-0.09; if(fault==="pow-safe")charge=-0.01; if(mode==="modo seguro"&&fault!=="pow")charge+=.03;
+      s.bat=Math.max(0,Math.min(100,s.bat+charge));
+      const tTarget=(inSun?28:12)+(fault==="temp"?32:0);
+      s.temp+= (tTarget-s.temp)*0.01 + (Math.random()-.5)*.2;
+      s.att += ((fault==="att"?14:0.4)-s.att)*0.02 + (Math.random()-.5)*.05;
+      if(mode==="recuperando"&&!fault&&Math.abs(s.att)<1&&s.temp<35){mode="nominal";log("o","✓ Variables de vuelta en rango. Modo nominal.");}
+      if(simT%6<1.5)hist.push({bat:s.bat,temp:s.temp,att:s.att,inSun});
+      if(hist.length>200)hist.shift();
+    }
+    // contacto: estación en ángulo pi/2 (arriba)
+    const gs=-Math.PI/2; let d=Math.atan2(Math.sin(ang-gs),Math.cos(ang-gs));
+    const contact=Math.abs(d)<0.6;
+    if(contact&&!lastContact)log("o","📡 Inicio de ventana de contacto con la estación terrena.");
+    if(!contact&&lastContact)log("o","Fin de ventana de contacto. Telemetría a la cola a bordo.");
+    lastContact=contact;
+    if(!contact) queue+= .5*sp; else {const f=Math.min(queue,6*sp);queue-=f;sentQ+=f+.5*sp;}
+    // razonamiento
+    const zt=z("temp"), za=z("att");
+    const issue = s.temp>45||zt>3?"temp" : Math.abs(s.att)>5||Math.abs(za)>3?"att" : (s.bat<35 && (fault==="pow"))?"pow":null;
+    if(issue && !decided){
+      const cmd={temp:"calefactor_off",att:"reorientar",pow:"modo_seguro"}[issue];
+      const why={temp:`T=${s.temp.toFixed(1)} °C (z=${zt.toFixed(1)}) supera el límite de 45 °C`,att:`error de actitud ${s.att.toFixed(1)}° supera 5°`,pow:`batería ${s.bat.toFixed(0)} % cae sin recuperarse`}[issue];
+      log("a","PERCIBIR: "+why+".");
+      decided=cmd;
+      if(g("#s3where").value==="board"){log("a","RAZONAR (a bordo): regla SI "+issue+" ENTONCES "+cmd+".");act(cmd);}
+      else{const delay=+g("#s3dist").value; const wait = (contact?0:(Math.PI*2-Math.abs(d))/0.006*1.5/2); const total=delay*2+wait;
+        log("a",`RAZONAR (en tierra): se notifica al operador. Retardo ida y vuelta ${fmtT(delay*2)}${contact?"":" + espera de contacto ≈ "+fmtT(wait)}.`);
+        pendingCmd={cmd,at:simT+Math.min(total,900),real:total};}
+    }
+    if(pendingCmd&&simT>=pendingCmd.at){log("a","Comando llega desde tierra tras "+fmtT(pendingCmd.real)+".");act(pendingCmd.cmd);pendingCmd=null;}
+    if(!fault&&decided&&mode==="nominal")decided=null;
+    if(fault==="pow-safe"&&s.bat>0)decided=decided;
+    // dibujar órbita
+    ox.fillStyle=C.sunk;ox.fillRect(0,0,320,260);
+    const cxo=160,cyo=135,R=56,OR=100;
+    ox.fillStyle=C.sig;ox.globalAlpha=.15;ox.fillRect(0,0,320,260);ox.globalAlpha=1;
+    ox.fillStyle=C.sunk;ox.beginPath();ox.moveTo(cxo,cyo-R);ox.lineTo(0,cyo-R*.9);ox.lineTo(0,cyo+R*.9);ox.lineTo(cxo,cyo+R);ox.fill();
+    ox.fillStyle=C.muted;ox.font="10px "+css("--f-mono");ox.textAlign="left";ox.fillText("☀ Sol →",250,16);ox.fillText("sombra",8,cyo+4);
+    ox.strokeStyle=C.line;ox.setLineDash([4,5]);ox.beginPath();ox.arc(cxo,cyo,OR,0,7);ox.stroke();ox.setLineDash([]);
+    ox.fillStyle=C.accs;ox.strokeStyle=C.acc;ox.lineWidth=2;ox.beginPath();ox.arc(cxo,cyo,R,0,7);ox.fill();ox.stroke();
+    const gx=cxo+Math.cos(gs)*R, gy=cyo+Math.sin(gs)*R;
+    ox.fillStyle=C.acc;ox.beginPath();ox.moveTo(gx,gy-10);ox.lineTo(gx-6,gy);ox.lineTo(gx+6,gy);ox.fill();
+    ox.fillStyle=C.fg;ox.textAlign="center";ox.fillText("Estación terrena",gx,gy+16);
+    // cono
+    ox.fillStyle=C.acc;ox.globalAlpha=.08;ox.beginPath();ox.moveTo(gx,gy);ox.arc(cxo,cyo,OR+14,gs-.6,gs+.6);ox.fill();ox.globalAlpha=1;
+    const sx=cxo+Math.cos(ang)*OR, sy=cyo+Math.sin(ang)*OR;
+    if(contact){ox.strokeStyle=C.ok;ox.setLineDash([3,3]);ox.lineWidth=1.5;ox.beginPath();ox.moveTo(gx,gy-8);ox.lineTo(sx,sy);ox.stroke();ox.setLineDash([]);}
+    ox.fillStyle=fault?C.bad:C.fg;ox.fillRect(sx-6,sy-6,12,12);ox.fillStyle=C.acc;ox.fillRect(sx-16,sy-3,9,6);ox.fillRect(sx+7,sy-3,9,6);
+    ox.fillStyle=C.fg;ox.textAlign="left";ox.fillText("CubeSat",sx+18,sy+4);
+    ox.fillStyle=contact?C.ok:C.muted;ox.font="600 11px "+css("--f-mono");ox.fillText(contact?"● CONTACTO":"○ SIN ENLACE",8,250);
+    ox.fillStyle=C.muted;ox.textAlign="right";ox.fillText("modo: "+mode,312,250);
+    // telemetría
+    tx.fillStyle=C.sunk;tx.fillRect(0,0,320,150);
+    const series=[["bat",C.acc,0,100],["temp",C.sig,0,70],["att",C.bad,0,16]];
+    tx.strokeStyle=C.line;tx.lineWidth=1;[30,60,90,120].forEach(y=>{tx.beginPath();tx.moveTo(0,y);tx.lineTo(320,y);tx.stroke();});
+    series.forEach(([k,col,mn,mx])=>{tx.strokeStyle=col;tx.lineWidth=1.8;tx.beginPath();hist.forEach((h,i)=>{const x=i/199*320,y=140-(Math.abs(h[k])-mn)/(mx-mn)*130;i?tx.lineTo(x,y):tx.moveTo(x,y);});tx.stroke();});
+    tx.font="10px "+css("--f-mono");tx.textAlign="left";
+    [["batería %",C.acc],["temp °C",C.sig],["actitud °",C.bad]].forEach((l,i)=>{tx.fillStyle=l[1];tx.fillRect(8+i*95,6,8,8);tx.fillStyle=C.fg;tx.fillText(l[0],20+i*95,14);});
+    if(simT%3<1.5*sp){
+      g("#s3now").innerHTML=`<div class="stat ${s.bat<35?"bad":"ok"}"><span>Batería</span><b>${s.bat.toFixed(0)} %</b></div><div class="stat ${s.temp>45?"bad":""}"><span>Temperatura</span><b>${s.temp.toFixed(1)} °C</b></div><div class="stat ${Math.abs(s.att)>5?"bad":""}"><span>Error de actitud</span><b>${s.att.toFixed(1)}°</b></div>`;
+      g("#s3link").innerHTML=`<div class="stat ${contact?"ok":"warn"}"><span>Estado del enlace</span><b>${contact?"Contacto":"Sin enlace"}</b></div><div class="stat"><span>Retardo de un sentido</span><b>${fmtT(+g("#s3dist").value)}</b></div><div class="stat ${queue>40?"warn":""}"><span>Paquetes en cola a bordo</span><b>${Math.round(queue)}</b></div><div class="stat"><span>Paquetes entregados</span><b>${Math.round(sentQ)}</b></div><div class="stat ${pendingCmd?"warn":""}"><span>Comando pendiente</span><b>${pendingCmd?pendingCmd.cmd:"—"}</b></div>`;
+    }
+    }
+    requestAnimationFrame(loop);
+  }
+  function fmtT(s){return s<1?Math.round(s*1000)+" ms":s<60?s.toFixed(1)+" s":(s/60).toFixed(1)+" min";}
+  requestAnimationFrame(loop);
+}
+
+/* ================= SIM 4: Sentimientos ================= */
+function sim4(root){
+  const SAMPLE=[
+   ["correo","Buenos días, el pedido llegó a tiempo y el servicio fue excelente. Muchas gracias al equipo."],
+   ["chat","Llevo tres días esperando una respuesta y nadie me soluciona el problema con la factura."],
+   ["ticket","Solicito el cambio de dirección de entrega para el próximo envío."],
+   ["red social","Me encanta la nueva app, es muy rápida y fácil de usar 👏"],
+   ["correo","El producto llegó dañado y la atención fue pésima. No volveré a comprar."],
+   ["chat","No está mal, pero el precio subió bastante este mes."],
+   ["ticket","Gracias por resolver el inconveniente tan rápido, quedo muy satisfecho."],
+   ["correo","Necesito una copia del contrato firmado, por favor."]];
+  root.innerHTML=`
+  <div class="controls">
+    <div class="ctl" style="flex:1 1 260px"><label for="s4in">Nuevo mensaje de cliente</label><input id="s4in" type="text" placeholder="Escriba un mensaje y pulse Analizar" value="El soporte técnico no responde y estoy muy molesto"></div>
+    <button class="btn" id="s4add">Analizar y enviar</button>
+    <div class="ctl"><label for="s4proto">Protocolo</label><select id="s4proto"><option value="http">HTTP/1.1 + JSON</option><option value="mqtt" selected>MQTT</option><option value="kafka">Kafka (lote)</option></select></div>
+    <div class="ctl"><label for="s4what">Qué se envía</label><select id="s4what"><option value="full" selected>Texto completo</option><option value="result">Solo resultado</option></select></div>
+    <div class="ctl"><label for="s4gz">Compresión</label><select id="s4gz"><option value="0" selected>Sin compresión</option><option value="1">gzip</option></select></div>
+    <div class="ctl"><label for="s4bw">Red</label><select id="s4bw"><option value="1">1 Mbps · 80 ms</option><option value="10" selected>10 Mbps · 30 ms</option><option value="100">100 Mbps · 5 ms</option></select></div>
+    <div class="ctl"><label for="s4vol">Mensajes por día: <span id="s4volv">10 000</span></label><input id="s4vol" type="range" min="2" max="6" step="1" value="4"></div>
+  </div>
+  <div class="sim-grid">
+    <div class="panel"><h4>1–4 · Mensajes, tokens y sentimiento</h4><div class="msgs" id="s4msgs"></div><p class="note" style="margin-top:6px">Tachado: palabra vacía (stopword). Verde y naranja: palabras del léxico. Mensajes de ejemplo de una empresa ficticia.</p></div>
+    <div class="panel"><h4>5 · Peso de los datos en la transmisión</h4><div class="stats" id="s4w"></div><div class="bars" id="s4bars" style="margin-top:12px"></div></div>
+  </div>
+  <div class="panel"><h4>6–7 · Dashboard empresarial</h4><div class="sim-grid" style="gap:10px"><canvas id="s4dash"></canvas><div class="stats" id="s4kpi"></div></div></div>`;
+  const g=id=>$(id,root);
+  const STOP=new Set("el la los las un una unos unas de del al a y o e en por para con que se me mi mis tu su sus es son fue ha he lo le les este esta esto ese esa muy más pero como ya nos al cuando sin sobre tan".split(" "));
+  const LEX={excelente:3,gracias:2,encanta:3,rápida:2,rápido:2,fácil:2,satisfecho:3,bien:2,bueno:2,buena:2,buenos:1,feliz:3,resolver:1,solucionado:2,amable:2,perfecto:3,
+    pésima:-3,pésimo:-3,dañado:-3,molesto:-3,problema:-2,esperando:-1,nadie:-1,mal:-2,subió:-1,tarde:-2,demora:-2,error:-2,queja:-2,nunca:-2,peor:-3,lento:-2,responde:1,soluciona:2,volveré:1,inconveniente:-1};
+  const NEG=new Set(["no","nunca","ni","tampoco"]);
+  const tok=s=>s.toLowerCase().normalize("NFC").match(/[\p{L}\p{N}]+|[^\s\p{L}\p{N}]/gu)||[];
+  function analyze(src,text){
+    const tk=tok(text); let score=0, marks=[]; let negate=0;
+    tk.forEach((w,i)=>{let m="";const v=LEX[w];
+      if(NEG.has(w)){negate=3;m="neg";}
+      else if(v!==undefined){const val=negate>0?-v:v;score+=val;m=val>0?"pos":"neg";}
+      else if(STOP.has(w))m="stop";
+      if(negate>0&&!NEG.has(w))negate--;
+      marks.push([w,m]);});
+    const label=score>=1?"pos":score<=-1?"neg":"neu";
+    const bytes=new TextEncoder().encode(text).length;
+    const sub=tk.reduce((a,w)=>a+Math.max(1,Math.ceil(w.length/4)),0);
+    return {src,text,tk:marks,score,label,bytes,words:tk.length,sub,id:Math.random().toString(36).slice(2,8)};
+  }
+  let msgs=SAMPLE.map(([s,t])=>analyze(s,t));
+  const NAMES={pos:"positivo",neg:"negativo",neu:"neutro"};
+  function payload(m){const what=g("#s4what").value;const o=what==="full"?{id:m.id,canal:m.src,texto:m.text,ts:"2026-10-01T09:30:00-05:00"}:{id:m.id,sent:m.label,score:m.score};return new TextEncoder().encode(JSON.stringify(o)).length;}
+  function overhead(){const p=g("#s4proto").value;return p==="http"?{h:420,ack:180,name:"encabezados HTTP + respuesta"}:p==="mqtt"?{h:2+18,ack:4,name:"encabezado fijo + tópico + PUBACK"}:{h:70,ack:0,name:"registro Kafka (lote)"};}
+  function redraw(){
+    g("#s4msgs").innerHTML=msgs.slice().reverse().map(m=>`<div class="msg"><div class="msg-top"><span>${esc(m.text)}</span><span class="pill ${m.label}">${NAMES[m.label]}</span></div>
+      <div class="chips">${m.tk.map(([w,c])=>`<span class="chip ${c}">${esc(w)}</span>`).join("")}</div>
+      <div class="msg-meta">${m.src} · ${m.words} tokens (palabras) · ≈${m.sub} subpalabras · ${m.bytes} B UTF-8 · puntaje ${m.score>0?"+":""}${m.score}</div></div>`).join("");
+    const ov=overhead(), gz=g("#s4gz").value==="1", bw=+g("#s4bw").value, rtt={1:80,10:30,100:5}[bw];
+    const vol=10**+g("#s4vol").value; g("#s4volv").textContent=vol.toLocaleString("es-CO");
+    const avgPay=msgs.reduce((a,m)=>a+payload(m),0)/msgs.length;
+    const payC = gz? (avgPay>150? avgPay*.62+20 : avgPay+20) : avgPay;
+    const proto=g("#s4proto").value;
+    const perMsg = payC + ov.h + ov.ack + 40 /*TCP/IP*/ ;
+    const perMsgK = proto==="kafka"? payC+ov.h + (40+60)/100 : perMsg;
+    const total = perMsgK*vol;
+    const tMsg = (perMsgK*8)/(bw*1e6)*1000 + (proto==="kafka"?rtt/100:rtt);
+    const tTotal = proto==="kafka"? total*8/(bw*1e6) + rtt*vol/100/1000 : (total*8/(bw*1e6)) + 0;
+    const eff = avgPay/perMsgK*100;
+    g("#s4w").innerHTML=`<div class="stat"><span>Carga útil promedio</span><b>${fmtB(avgPay)}</b></div><div class="stat"><span>Bytes por mensaje en la red</span><b>${fmtB(perMsgK)}</b></div><div class="stat ${eff<40?"bad":eff<70?"warn":"ok"}"><span>Eficiencia (útil / total)</span><b>${eff.toFixed(0)} %</b></div><div class="stat"><span>Latencia por mensaje</span><b>${tMsg.toFixed(1)} ms</b></div><div class="stat"><span>Tráfico diario</span><b>${fmtB(total)}</b></div><div class="stat"><span>Tiempo de enlace ocupado</span><b>${tTotal<60?tTotal.toFixed(1)+" s":(tTotal/60).toFixed(1)+" min"}</b></div>`;
+    const parts=[["Texto / resultado",payC],["Protocolo ("+ov.name+")",proto==="kafka"?ov.h:ov.h+ov.ack],["TCP/IP",proto==="kafka"?1:40]];
+    const mx=Math.max(...parts.map(p=>p[1]));
+    g("#s4bars").innerHTML=parts.map(p=>`<div class="bar"><span>${esc(p[0].split(" (")[0])}</span><div class="track"><div class="fill" style="width:${Math.max(1,p[1]/mx*100)}%"></div></div><span class="v">${fmtB(p[1])}</span></div>`).join("")+`<p class="note">${esc(ov.name)}. TCP/IP: 20 B IP + 20 B TCP por segmento${proto==="kafka"?", repartidos en lotes de 100":""}.</p>`;
+    // dashboard
+    const c=g("#s4dash"), x=setupCanvas(c,320,150), C=colors();
+    const cnt={pos:0,neu:0,neg:0}; msgs.forEach(m=>cnt[m.label]++);
+    x.fillStyle=C.sunk;x.fillRect(0,0,320,150);
+    const keys=[["pos",C.acc],["neu",C.muted],["neg",C.sig]]; const mxc=Math.max(1,...Object.values(cnt));
+    keys.forEach(([k,col],i)=>{const h=cnt[k]/mxc*100;const bx=30+i*95;x.fillStyle=col;x.fillRect(bx,125-h,60,h);x.fillStyle=C.fg;x.font="600 13px "+css("--f-mono");x.textAlign="center";x.fillText(cnt[k],bx+30,118-h);x.font="11px "+css("--f-body");x.fillStyle=C.muted;x.fillText(NAMES[k],bx+30,141);});
+    x.strokeStyle=C.line;x.beginPath();x.moveTo(20,125.5);x.lineTo(300,125.5);x.stroke();
+    const n=msgs.length, idx=((cnt.pos-cnt.neg)/n*100);
+    const worst=msgs.reduce((a,m)=>m.score<a.score?m:a,msgs[0]);
+    g("#s4kpi").innerHTML=`<div class="stat"><span>Mensajes analizados</span><b>${n}</b></div><div class="stat ${idx<0?"bad":"ok"}"><span>Índice neto (pos − neg)</span><b>${idx>0?"+":""}${idx.toFixed(0)}</b></div><div class="stat ${cnt.neg/n>.3?"bad":"warn"}"><span>% negativos</span><b>${(cnt.neg/n*100).toFixed(0)} %</b></div><div class="stat bad" style="grid-column:1/-1"><span>Alerta: mensaje más negativo</span><b style="font-size:13px;font-family:var(--f-body)">${esc(worst.text.slice(0,70))}${worst.text.length>70?"…":""}</b></div>`;
+  }
+  g("#s4add").addEventListener("click",()=>{const v=g("#s4in").value.trim();if(!v)return;msgs.push(analyze("chat",v));if(msgs.length>30)msgs.shift();g("#s4in").value="";redraw();});
+  g("#s4in").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();g("#s4add").click();}});
+  root.addEventListener("input",e=>{if(e.target.id!=="s4in")redraw();});
+  redraw();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",redraw);
+  new MutationObserver(redraw).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+}
+
+const SIMS={p1:sim1,p2:sim2,p3:sim3,p4:sim4};
+const main=$("#main"), tabs=$("#tabs");
+tabs.innerHTML=P.map((p,i)=>`<button class="tab" role="tab" id="tab-${p.id}" aria-selected="${i===0}" data-id="${p.id}"><b>${p.num}</b>${esc(p.short)}</button>`).join("");
+main.innerHTML=P.map((p,i)=>`<div id="view-${p.id}" role="tabpanel" ${i?"hidden":""}>${render(p)}</div>`).join("");
+P.forEach(p=>SIMS[p.id]($(`#${p.id}-simroot`)));
+function show(id){P.forEach(p=>{$("#view-"+p.id).hidden=p.id!==id;$("#tab-"+p.id).setAttribute("aria-selected",p.id===id);});try{localStorage.setItem("tabProy",id)}catch(e){}}
+tabs.addEventListener("click",e=>{const b=e.target.closest(".tab");if(b){show(b.dataset.id);window.scrollTo({top:tabs.offsetTop-10});}});
+const h=(location.hash||"").slice(1).split("-")[0]; let start="p1"; try{start=localStorage.getItem("tabProy")||start}catch(e){} if(SIMS[h])start=h; show(start);
+</script>
+
+</body></html>
